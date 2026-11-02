@@ -113,6 +113,7 @@ Prompt rules are advice, and this list is the limit. It protects this server onl
 
 - **The local model talks nonsense.** Ollama silently truncates a prompt that overruns the model's context. Claude Code's default prompt is about 35,000 tokens, which is why the local setup uses a small agent with only the tools it needs.
 - **Renders suddenly take minutes.** The language model and the image model share the graphics card. A smaller language model speeds up the whole stack.
+- **The whole desktop dies during a video upscale.** `wan-video-upscale` holds every upscaled frame in system RAM. A 5-second 1344x768 clip passed 48 GB here and the Linux OOM killer took out ComfyUI and other apps. Keep its input small and short.
 - **`ECONNREFUSED`.** ComfyUI isn't running.
 - **A 3D result won't print.** Hunyuan3D writes GLB files, often in thousands of open pieces. Run `tools/mesh_to_solid.py`, which needs `numpy`, `scipy`, `scikit-image` and `trimesh`. The STL has not been slice-tested or printed yet.
 

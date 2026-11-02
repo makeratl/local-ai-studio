@@ -512,12 +512,14 @@ export class WorkflowRunner {
       return images;
     }
 
-    for (const [nodeId, output] of Object.entries(historyEntry.outputs)) {
-      const outputData = output as any;
-      if (outputData.images) {
-        for (const img of outputData.images) {
-          if (img.type && img.type !== 'output') continue;  // skip input/temp previews (e.g. LoadVideo)
-          images.push(path.join(this.comfyOutputDir, img.subfolder || '', img.filename));
+    for (const output of Object.values(historyEntry.outputs)) {
+      // Nodes report files under different keys (images, 3d, ...), so accept any list of files
+      for (const files of Object.values(output as any)) {
+        if (!Array.isArray(files)) continue;
+        for (const file of files as any[]) {
+          if (!file?.filename) continue;
+          if (file.type && file.type !== 'output') continue;  // skip input/temp previews (e.g. LoadVideo)
+          images.push(path.join(this.comfyOutputDir, file.subfolder || '', file.filename));
         }
       }
     }

@@ -2,7 +2,7 @@
   "id": "wan-video-upscale",
   "display_name": "WAN Video Upscale (4x)",
   "category": "video-post",
-  "description": "Upscale any video 4x using RealESRGAN. Takes video input and outputs upscaled video. Works on WAN outputs or any other video source.",
+  "description": "Upscale any video 4x using RealESRGAN. Takes video input and outputs upscaled video. Works on WAN outputs or any other video source. WARNING: holds all upscaled frames in system RAM. A 5 s 1344x768 clip exceeded 48 GB and crashed the machine; only use it on small, short clips.",
   "source_file": "wan-video-upscale.json",
   "input_node": 0,
   "input_param": "video",
