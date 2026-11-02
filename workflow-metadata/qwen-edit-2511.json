@@ -1,0 +1,131 @@
+{
+  "id": "qwen-edit-2511",
+  "display_name": "Qwen Image Edit 2511 (Character Consistency)",
+  "category": "image-to-image",
+  "description": "Instruction-driven image editing with Qwen-Image-Edit-2511. Preserves character identity and line style from up to 3 reference images while changing pose, wardrobe, expression, or props. Built for consistent character work. for big pose/wardrobe/scene edits flux3-klein-edit is better and ~20x faster. Prefer it for small precise additions such as hats and props.",
+  "source_file": "qwen-edit-2511.json",
+  "seed_node": 3,
+  "output": {
+    "save_node": 60,
+    "save_param": "filename_prefix"
+  },
+  "parameters": {
+    "prompt": {
+      "node": "76",
+      "input": "prompt",
+      "type": "STRING",
+      "required": true,
+      "description": "Edit instruction, e.g. 'Change his pose so he is standing on his hind legs pointing forward with one paw. Keep everything else identical.'"
+    },
+    "negative_prompt": {
+      "node": "77",
+      "input": "prompt",
+      "type": "STRING",
+      "default": "",
+      "description": "Negative prompt. Usually leave empty for edit models."
+    },
+    "image1": {
+      "node": "101",
+      "input": "image",
+      "type": "STRING",
+      "required": true,
+      "description": "Primary reference image (filename after upload). This is the image being edited."
+    },
+    "image2": {
+      "node": "102",
+      "input": "image",
+      "type": "STRING",
+      "required": false,
+      "description": "Second reference for identity lock (e.g. a different angle of the same character). Repeat image1 if unused."
+    },
+    "image3": {
+      "node": "103",
+      "input": "image",
+      "type": "STRING",
+      "required": false,
+      "description": "Third reference for identity lock. Repeat image1 if unused."
+    },
+    "megapixels": {
+      "node": "110",
+      "input": "megapixels",
+      "type": "FLOAT",
+      "default": 1.0,
+      "min": 0.25,
+      "max": 2.0,
+      "description": "Working resolution. 1.0 = ~1024x1024. Raise for more detail, lower for speed."
+    },
+    "steps": {
+      "node": "3",
+      "input": "steps",
+      "type": "INT",
+      "default": 20,
+      "min": 4,
+      "max": 50,
+      "description": "Sampling steps. 20 is the sweet spot for edit."
+    },
+    "cfg": {
+      "node": "3",
+      "input": "cfg",
+      "type": "FLOAT",
+      "default": 2.5,
+      "min": 1.0,
+      "max": 8.0,
+      "description": "Guidance. 2.5 default. Raise toward 4 to force the instruction harder, lower toward 1.5 for gentler edits."
+    },
+    "denoise": {
+      "node": "3",
+      "input": "denoise",
+      "type": "FLOAT",
+      "default": 1.0,
+      "min": 0.1,
+      "max": 1.0,
+      "description": "Keep at 1.0 for normal edits. Lower to 0.6-0.85 for very subtle changes that hug the source pixels."
+    },
+    "shift": {
+      "node": "66",
+      "input": "shift",
+      "type": "FLOAT",
+      "default": 3.0,
+      "min": 0.5,
+      "max": 8.0,
+      "description": "Model sampling shift. 3.0 default."
+    },
+    "angles_lora_strength": {
+      "node": "78",
+      "input": "strength_model",
+      "type": "FLOAT",
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1.5,
+      "description": "Multiple-Angles LoRA strength. 0 = off. Set 0.6-1.0 when asking for camera/body rotation ('turn him to a 3/4 view', 'show him from behind')."
+    },
+    "sampler_name": {
+      "node": "3",
+      "input": "sampler_name",
+      "type": "COMBO",
+      "default": "euler",
+      "options": [
+        "euler",
+        "euler_ancestral",
+        "dpmpp_2m",
+        "res_multistep",
+        "ddim"
+      ]
+    },
+    "scheduler": {
+      "node": "3",
+      "input": "scheduler",
+      "type": "COMBO",
+      "default": "simple",
+      "options": [
+        "simple",
+        "normal",
+        "karras",
+        "beta",
+        "sgm_uniform"
+      ]
+    }
+  },
+  "default_filename_prefix": "QwenEdit-2511",
+  "seed_param": "seed"
+}

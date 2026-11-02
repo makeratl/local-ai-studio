@@ -1,0 +1,51 @@
+{
+  "id": "qwen-lightning-4step",
+  "display_name": "Qwen Lightning 4-Step",
+  "category": "text-to-image",
+  "description": "Fast Qwen generation using Lightning 4-step LoRA. Best quality with minimal steps. for photoreal/cinematic use qwen-2512-lightning-4step. Default for stylized work (flat 2D, cel, picture-book) and style LoRAs.",
+  "source_file": "qwen-lightning-4step.json",
+  "seed_node": 3,
+  "output": {
+    "save_node": 9,
+    "save_param": "filename_prefix"
+  },
+  "parameters": {
+    "prompt": {
+      "node": "6",
+      "input": "text",
+      "type": "STRING",
+      "required": true
+    },
+    "negative_prompt": {
+      "node": "7",
+      "input": "text",
+      "type": "STRING",
+      "default": ""
+    },
+    "aspect_ratio": {
+      "node": "5",
+      "input": "aspect_ratio",
+      "type": "COMBO",
+      "default": "1:1 Square",
+      "options": [
+        "1:1 Square",
+        "16:9 Landscape",
+        "9:16 Portrait",
+        "4:3 Landscape",
+        "3:4 Portrait",
+        "3:2 Landscape",
+        "2:3 Portrait"
+      ]
+    },
+    "batch_size": {
+      "node": "5",
+      "input": "batch_size",
+      "type": "INT",
+      "default": 1,
+      "min": 1,
+      "max": 4
+    }
+  },
+  "default_filename_prefix": "Qwen-4step",
+  "seed_param": "seed"
+}

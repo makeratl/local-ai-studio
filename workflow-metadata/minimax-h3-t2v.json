@@ -1,0 +1,60 @@
+{
+  "id": "minimax-h3-t2v",
+  "display_name": "MiniMax H3 Text to Video + Audio (8-step turbo)",
+  "category": "video",
+  "description": "Text-to-video with native stereo audio (dialogue, SFX, music generated together) using MiniMax H3 FL2VA pruned int8 + 8-step turbo LoRA. 24fps. Frame counts snap up to 5+17n (124 = ~5s, 362 = 15s max). ~3-5 min per 5s clip on the 5090 Prompt tips: describe SHOTs in order, end with an 'Audio:' line; dialogue as (S1): <d>[English] words</d>. Needs at least 18 GB of swap active (~44GB RAM peak) and nothing else on the GPU. Long jobs return status 'running': poll get_job_result with wait_seconds.",
+  "source_file": "minimax-h3-t2v.json",
+  "seed_node": 10,
+  "seed_param": "noise_seed",
+  "output": {
+    "save_node": 53,
+    "save_param": "filename_prefix"
+  },
+  "parameters": {
+    "prompt": {
+      "node": "20",
+      "input": "prompt",
+      "type": "STRING",
+      "required": true,
+      "description": "Shot-by-shot scene description plus an 'Audio:' line describing sound/music/dialogue"
+    },
+    "width": {
+      "node": "20",
+      "input": "width",
+      "type": "INT",
+      "default": 1344,
+      "min": 512,
+      "max": 1536,
+      "description": "Video width (multiple of 32; native canvas 1344x768)"
+    },
+    "height": {
+      "node": "20",
+      "input": "height",
+      "type": "INT",
+      "default": 768,
+      "min": 512,
+      "max": 1536,
+      "description": "Video height (multiple of 32)"
+    },
+    "frames": {
+      "node": "20",
+      "input": "length",
+      "type": "INT",
+      "default": 124,
+      "min": 5,
+      "max": 362,
+      "description": "Frame count at 24fps, snapped up to 5+17n (124=~5s, 243=~10s, 362=15s)"
+    },
+    "steps": {
+      "node": "12",
+      "input": "steps",
+      "type": "INT",
+      "default": 8,
+      "min": 4,
+      "max": 30,
+      "description": "Sampling steps (8 matches the turbo LoRA)"
+    }
+  },
+  "default_filename_prefix": "video/MiniMaxH3_t2v",
+  "min_swap_gb": 18
+}

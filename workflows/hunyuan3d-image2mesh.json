@@ -1,0 +1,108 @@
+{
+  "1": {
+    "inputs": {
+      "image": "{{input_image}}"
+    },
+    "class_type": "LoadImage",
+    "_meta": { "title": "Load Image" }
+  },
+  "2": {
+    "inputs": {
+      "model": "RMBG-2.0",
+      "sensitivity": 1,
+      "process_res": 1024,
+      "mask_blur": 0,
+      "mask_offset": 0,
+      "invert_output": false,
+      "refine_foreground": false,
+      "background": "Color",
+      "background_color": "#ffffff",
+      "image": ["1", 0]
+    },
+    "class_type": "RMBG",
+    "_meta": { "title": "Remove Background (RMBG)" }
+  },
+  "3": {
+    "inputs": {
+      "crop": "none",
+      "clip_vision": ["5", 1],
+      "image": ["2", 0]
+    },
+    "class_type": "CLIPVisionEncode",
+    "_meta": { "title": "CLIP Vision Encode" }
+  },
+  "4": {
+    "inputs": {
+      "clip_vision_output": ["3", 0]
+    },
+    "class_type": "Hunyuan3Dv2Conditioning",
+    "_meta": { "title": "Hunyuan3Dv2Conditioning" }
+  },
+  "5": {
+    "inputs": {
+      "ckpt_name": "hunyuan3d-dit-v2_fp16.safetensors"
+    },
+    "class_type": "ImageOnlyCheckpointLoader",
+    "_meta": { "title": "Image Only Checkpoint Loader" }
+  },
+  "6": {
+    "inputs": {
+      "shift": 1.0,
+      "model": ["5", 0]
+    },
+    "class_type": "ModelSamplingAuraFlow",
+    "_meta": { "title": "ModelSamplingAuraFlow" }
+  },
+  "7": {
+    "inputs": {
+      "resolution": 3072,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentHunyuan3Dv2",
+    "_meta": { "title": "EmptyLatentHunyuan3Dv2" }
+  },
+  "8": {
+    "inputs": {
+      "seed": "{{seed}}",
+      "steps": 20,
+      "cfg": 8,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 1,
+      "model": ["6", 0],
+      "positive": ["4", 0],
+      "negative": ["4", 1],
+      "latent_image": ["7", 0]
+    },
+    "class_type": "KSampler",
+    "_meta": { "title": "KSampler" }
+  },
+  "9": {
+    "inputs": {
+      "num_chunks": 8294,
+      "octree_resolution": 256,
+      "samples": ["8", 0],
+      "vae": ["5", 2]
+    },
+    "class_type": "VAEDecodeHunyuan3D",
+    "_meta": { "title": "VAEDecodeHunyuan3D" }
+  },
+  "10": {
+    "inputs": {
+      "algorithm": "surface net",
+      "threshold": 0.6,
+      "voxel": ["9", 0]
+    },
+    "class_type": "VoxelToMesh",
+    "_meta": { "title": "VoxelToMesh" }
+  },
+  "11": {
+    "inputs": {
+      "filename_prefix": "{{filename_prefix}}",
+      "image": "",
+      "mesh": ["10", 0]
+    },
+    "class_type": "SaveGLB",
+    "_meta": { "title": "Save 3D Model" }
+  }
+}

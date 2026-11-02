@@ -1,0 +1,145 @@
+{
+  "id": "qwen-controlnet",
+  "display_name": "Qwen with ControlNet (Canny)",
+  "category": "image-to-image",
+  "description": "Qwen Image generation with Canny edge ControlNet for structure guidance. Uses reference image composition for controlled generation.",
+  "source_file": "image_qwen_Image_2512_controlnet.json",
+  "parameters": {
+    "prompt": {
+      "node_path": [
+        "86:81",
+        "inputs",
+        "text"
+      ],
+      "type": "STRING",
+      "required": true,
+      "description": "Main positive prompt for image generation"
+    },
+    "negative_prompt": {
+      "node_path": [
+        "86:7",
+        "inputs",
+        "text"
+      ],
+      "type": "STRING",
+      "required": false,
+      "default": "低分辨率，低画质，肢体畸形，手指畸形，画面过饱和，蜡像感，人脸无细节，过度光滑，画面具有AI感。构图混乱。文字模糊，扭曲",
+      "description": "Negative prompt for quality control"
+    },
+    "init_image": {
+      "node_path": [
+        121,
+        "inputs",
+        "image"
+      ],
+      "type": "STRING",
+      "required": true,
+      "description": "Reference image for ControlNet (filename after upload)"
+    },
+    "canny_low_threshold": {
+      "node_path": [
+        122,
+        "inputs",
+        "low_threshold"
+      ],
+      "type": "FLOAT",
+      "required": false,
+      "default": 0.33,
+      "min": 0.01,
+      "max": 0.99,
+      "description": "Canny edge detection low threshold"
+    },
+    "canny_high_threshold": {
+      "node_path": [
+        122,
+        "inputs",
+        "high_threshold"
+      ],
+      "type": "FLOAT",
+      "required": false,
+      "default": 0.35,
+      "min": 0.01,
+      "max": 0.99,
+      "description": "Canny edge detection high threshold"
+    },
+    "enable_turbo": {
+      "node_path": [
+        "86:118",
+        "inputs",
+        "value"
+      ],
+      "type": "BOOLEAN",
+      "required": false,
+      "default": false,
+      "description": "Enable 4-step Lightning mode (faster, lower quality)"
+    },
+    "controlnet_strength": {
+      "node_path": [
+        "86:129",
+        "inputs",
+        "strength"
+      ],
+      "type": "FLOAT",
+      "required": false,
+      "default": 1.0,
+      "min": 0.0,
+      "max": 2.0,
+      "description": "ControlNet influence strength"
+    }
+  },
+  "hidden_parameters": {
+    "unet_name": {
+      "node_path": [
+        "86:37",
+        "inputs",
+        "unet_name"
+      ],
+      "default": "qwen_image_2512_fp8_e4m3fn.safetensors",
+      "locked": true
+    },
+    "clip_name": {
+      "node_path": [
+        "86:38",
+        "inputs",
+        "clip_name"
+      ],
+      "default": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "locked": true
+    },
+    "vae_name": {
+      "node_path": [
+        "86:39",
+        "inputs",
+        "vae_name"
+      ],
+      "default": "qwen_image_vae.safetensors",
+      "locked": true
+    },
+    "controlnet_name": {
+      "node_path": [
+        "86:130",
+        "inputs",
+        "control_net_name"
+      ],
+      "default": "Qwen-Image-2512-Fun-Controlnet-Union-2602.safetensors",
+      "locked": true
+    },
+    "lora_name": {
+      "node_path": [
+        "86:111",
+        "inputs",
+        "lora_name"
+      ],
+      "default": "Qwen-Image-Lightning-4steps-V1.0.safetensors",
+      "locked": true
+    }
+  },
+  "seed_node": "86:3",
+  "seed_param": "seed",
+  "output": {
+    "type": "IMAGE",
+    "save_node": 60,
+    "save_param": "filename_prefix"
+  },
+  "default_filename_prefix": "Qwen-ControlNet"
+}

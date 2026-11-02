@@ -1,0 +1,75 @@
+{
+  "id": "minimax-h3-flf2v-fast",
+  "display_name": "MiniMax H3 First/Last Frame to Video + Audio (4-step fast)",
+  "category": "video",
+  "description": "First + last frame to video WITH native audio. Actually stages the transition (walks through doors, crosses rooms) and lands on the last frame; WAN FLF smeared and duplicated the character on the same test. Watch for small prop growth mid-clip. MiniMax H3 FL2VA pruned int8 + 4-step 768p turbo LoRA. DEFAULT for video: ~2 min per 5s clip, same quality class as the 8-step. ~44GB system RAM at peak: Needs at least 18 GB of swap active (the run refuses otherwise) and nothing else on the GPU; stop Chatterbox/ACE/Qwen-TTS first. 24fps, frames snap up to 5+17n (124=~5s, 243=~10s, 362=15s max). Width/height must match the input image aspect (it is stretched). Prompt: style line, then SHOT lines describing motion, dialogue as (S1): <d>[English] words</d>, end with an 'Audio:' line. Audio loudness varies clip to clip (-31 to -16 dB): loudnorm before mixing. Long jobs return status 'running': poll get_job_result with wait_seconds.",
+  "source_file": "minimax-h3-flf2v-fast.json",
+  "seed_node": 10,
+  "seed_param": "noise_seed",
+  "output": {
+    "type": "VIDEO",
+    "save_node": 53,
+    "save_param": "filename_prefix"
+  },
+  "parameters": {
+    "prompt": {
+      "node": "20",
+      "input": "prompt",
+      "type": "STRING",
+      "required": true,
+      "description": "Style line + SHOT-by-SHOT motion + dialogue as (S1): <d>[English] words</d> + final 'Audio:' line"
+    },
+    "first_frame": {
+      "node": "30",
+      "input": "image",
+      "type": "IMAGE",
+      "required": true,
+      "description": "First frame (local path, uploaded automatically)"
+    },
+    "last_frame": {
+      "node": "31",
+      "input": "image",
+      "type": "IMAGE",
+      "required": true,
+      "description": "Last frame the clip must land on (local path, uploaded automatically), same aspect as first_frame"
+    },
+    "width": {
+      "node": "20",
+      "input": "width",
+      "type": "INT",
+      "default": 1152,
+      "min": 512,
+      "max": 1536,
+      "description": "Video width (multiple of 32), same aspect as the input"
+    },
+    "height": {
+      "node": "20",
+      "input": "height",
+      "type": "INT",
+      "default": 768,
+      "min": 512,
+      "max": 1536,
+      "description": "Video height (multiple of 32), same aspect as the input"
+    },
+    "frames": {
+      "node": "20",
+      "input": "length",
+      "type": "INT",
+      "default": 124,
+      "min": 5,
+      "max": 362,
+      "description": "Frame count at 24fps, snapped up to 5+17n (124=~5s, 243=~10s, 362=15s)"
+    },
+    "steps": {
+      "node": "12",
+      "input": "steps",
+      "type": "INT",
+      "default": 4,
+      "min": 4,
+      "max": 8,
+      "description": "Sampling steps (4 matches the turbo LoRA)"
+    }
+  },
+  "default_filename_prefix": "video/MiniMaxH3_flf2v_fast",
+  "min_swap_gb": 18
+}

@@ -1,0 +1,48 @@
+{
+ "20": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "example.png"
+  }
+ },
+ "40": {
+  "class_type": "UpscaleModelLoader",
+  "inputs": {
+   "model_name": "RealESRGAN_x4plus.safetensors"
+  }
+ },
+ "41": {
+  "class_type": "ImageUpscaleWithModel",
+  "inputs": {
+   "upscale_model": [
+    "40",
+    0
+   ],
+   "image": [
+    "20",
+    0
+   ]
+  }
+ },
+ "42": {
+  "class_type": "ImageScaleBy",
+  "inputs": {
+   "image": [
+    "41",
+    0
+   ],
+   "upscale_method": "lanczos",
+   "scale_by": 0.5
+  }
+ },
+ "9": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "filename_prefix": "",
+   "images": [
+    "42",
+    0
+   ]
+  }
+ }
+}

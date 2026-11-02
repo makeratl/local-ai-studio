@@ -1,0 +1,74 @@
+{
+  "id": "flux3-klein-edit",
+  "display_name": "FLUX 3 Klein Edit (1-4 references)",
+  "category": "image-to-image",
+  "description": "Instruction edit / multi-reference composition with FLUX 3 Image Klein (distilled bf16), ~5 s warm. Best for BIG structural edits: pose changes, full wardrobe swaps, putting a character into another image's scene; use qwen-edit-2511 for those. Write the prompt the way BFL's upsampler does: one detailed instruction with concrete end states, ordinal image references, closing with what stays unchanged. LICENSE: FLUX Kommunity v1.0, commercial use only while gross revenue is under $5M; outputs need human review and AI disclosure where required by law. Weaker at small additions near a face; use qwen-edit-2511 for those.",
+  "source_file": "flux3-klein-edit.json",
+  "seed_node": 107,
+  "seed_param": "seed",
+  "output": {
+    "type": "IMAGE",
+    "save_node": 9,
+    "save_param": "filename_prefix"
+  },
+  "parameters": {
+    "prompt": {
+      "node": "104",
+      "input": "text",
+      "type": "STRING",
+      "required": true,
+      "description": "Detailed edit instruction (50-150 words): name the change concretely, refer to inputs as 'the first image', 'the second image', and end with what stays unchanged"
+    },
+    "image1": {
+      "node": "200",
+      "input": "image",
+      "type": "IMAGE",
+      "required": true,
+      "remove_if_unset": false,
+      "description": "Reference 'first image' (local path, uploaded automatically): the image being edited; sets the output aspect"
+    },
+    "image2": {
+      "node": "201",
+      "input": "image",
+      "type": "IMAGE",
+      "required": false,
+      "remove_if_unset": true,
+      "description": "Reference 'second image' (local path, uploaded automatically), optional"
+    },
+    "image3": {
+      "node": "202",
+      "input": "image",
+      "type": "IMAGE",
+      "required": false,
+      "remove_if_unset": true,
+      "description": "Reference 'third image' (local path, uploaded automatically), optional"
+    },
+    "image4": {
+      "node": "203",
+      "input": "image",
+      "type": "IMAGE",
+      "required": false,
+      "remove_if_unset": true,
+      "description": "Reference 'fourth image' (local path, uploaded automatically), optional"
+    },
+    "megapixels": {
+      "node": "50",
+      "input": "value",
+      "type": "FLOAT",
+      "default": 1.0,
+      "min": 0.5,
+      "max": 4.0,
+      "description": "Output size at image1's aspect (1.0 ~ 1024x1024)"
+    },
+    "steps": {
+      "node": "107",
+      "input": "steps",
+      "type": "INT",
+      "default": 8,
+      "min": 4,
+      "max": 16,
+      "description": "Distilled model: 8 looked identical to 16 in the testing"
+    }
+  },
+  "default_filename_prefix": "Klein-Edit"
+}

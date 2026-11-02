@@ -1,0 +1,67 @@
+{
+  "id": "qwen-full",
+  "display_name": "Qwen Full Quality",
+  "category": "text-to-image",
+  "description": "Qwen base model without Lightning. Higher CFG and more steps for maximum quality. for photoreal/cinematic use qwen-2512-full. Default for stylized work (flat 2D, cel, picture-book) and style LoRAs.",
+  "source_file": "qwen-full.json",
+  "seed_node": 3,
+  "output": {
+    "save_node": 9,
+    "save_param": "filename_prefix"
+  },
+  "parameters": {
+    "prompt": {
+      "node": "6",
+      "input": "text",
+      "type": "STRING",
+      "required": true
+    },
+    "negative_prompt": {
+      "node": "7",
+      "input": "text",
+      "type": "STRING",
+      "default": ""
+    },
+    "aspect_ratio": {
+      "node": "5",
+      "input": "aspect_ratio",
+      "type": "COMBO",
+      "default": "1:1 Square",
+      "options": [
+        "1:1 Square",
+        "16:9 Landscape",
+        "9:16 Portrait",
+        "4:3 Landscape",
+        "3:4 Portrait",
+        "3:2 Landscape",
+        "2:3 Portrait"
+      ]
+    },
+    "batch_size": {
+      "node": "5",
+      "input": "batch_size",
+      "type": "INT",
+      "default": 1,
+      "min": 1,
+      "max": 4
+    },
+    "steps": {
+      "node": "3",
+      "input": "steps",
+      "type": "INT",
+      "default": 50,
+      "min": 10,
+      "max": 50
+    },
+    "cfg": {
+      "node": "3",
+      "input": "cfg",
+      "type": "FLOAT",
+      "default": 4.0,
+      "min": 1.0,
+      "max": 10.0
+    }
+  },
+  "default_filename_prefix": "Qwen-Full",
+  "seed_param": "seed"
+}

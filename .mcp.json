@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "comfy": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["dist/index.js"],
+      "env": {
+        "COMFYUI_PATH": "${COMFYUI_PATH}",
+        "COMFYUI_URL": "http://127.0.0.1:8188",
+        "COMFY_MCP_ALLOW": "${COMFY_MCP_ALLOW:-text-to-image,upscale}"
+      }
+    }
+  }
+}

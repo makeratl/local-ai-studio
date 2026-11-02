@@ -1,0 +1,39 @@
+{
+  "id": "wan-video-upscale",
+  "display_name": "WAN Video Upscale (4x)",
+  "category": "video-post",
+  "description": "Upscale any video 4x using RealESRGAN. Takes video input and outputs upscaled video. Works on WAN outputs or any other video source.",
+  "source_file": "wan-video-upscale.json",
+  "input_node": 0,
+  "input_param": "video",
+  "output": {
+    "save_node": 5,
+    "save_param": "filename_prefix"
+  },
+  "parameters": {
+    "input_video": {
+      "node": "0",
+      "input": "file",
+      "type": "VIDEO",
+      "required": true,
+      "description": "Filename of a video already in ComfyUI's input folder (not a path)"
+    },
+    "upscale_model": {
+      "node": "1",
+      "input": "model_name",
+      "type": "COMBO",
+      "default": "RealESRGAN_x4plus.safetensors",
+      "description": "Upscale model to use",
+      "dynamic_options": true,
+      "model_type": "upscale"
+    },
+    "filename_prefix": {
+      "node": "5",
+      "input": "filename_prefix",
+      "type": "STRING",
+      "default": "WAN-Upscaled",
+      "description": "Output filename prefix"
+    }
+  },
+  "default_filename_prefix": "WAN-Upscaled"
+}

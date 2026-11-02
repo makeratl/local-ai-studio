@@ -1,0 +1,111 @@
+{
+  "id": "minimax-h3-ref2v",
+  "display_name": "MiniMax H3 Reference to Video + Audio (4-step)",
+  "category": "video",
+  "description": "Generates a NEW scene with native audio from up to 4 reference images and an optional voice clip, with no pinned first frame. For recurring characters when you don't need an exact approved keyframe: testing staged a new scene from the prompt and spoke the line word-perfect, but art style drifted (darker, more animated-series). If the shot must match an approved keyframe, use qwen-edit-2511 + minimax-h3-i2v-fast instead. MiniMax H3 Ref2VA pruned int8 + 4-step turbo LoRA. ~4 min per 5s clip, ~44GB system RAM at peak: Needs at least 18 GB of swap active (the run refuses otherwise) and nothing else on the GPU; stop Chatterbox/ACE/Qwen-TTS first. 24fps, frames snap up to 5+17n (124=~5s, 243=~10s, 362=15s max). Prompt: style line, then SHOT lines describing motion, dialogue as (S1): <d>[English] words</d>, end with an 'Audio:' line. Audio loudness varies clip to clip (-31 to -16 dB): loudnorm before mixing. Long jobs return status 'running': poll get_job_result with wait_seconds.",
+  "source_file": "minimax-h3-ref2v.json",
+  "seed_node": 10,
+  "seed_param": "noise_seed",
+  "output": {
+    "type": "VIDEO",
+    "save_node": 53,
+    "save_param": "filename_prefix"
+  },
+  "parameters": {
+    "prompt": {
+      "node": "20",
+      "input": "prompt",
+      "type": "STRING",
+      "required": true,
+      "description": "Refer to references as <Picture 1>..<Picture 4> and the voice as <Audio 1>; style line + SHOT lines + (S1): <d>[English] words</d> + 'Audio:' line"
+    },
+    "ref_image_1": {
+      "node": "30",
+      "input": "image",
+      "type": "IMAGE",
+      "required": true,
+      "remove_if_unset": false,
+      "description": "Reference image <Picture 1> (character, outfit, location; local path, uploaded automatically)"
+    },
+    "ref_image_2": {
+      "node": "31",
+      "input": "image",
+      "type": "IMAGE",
+      "required": false,
+      "remove_if_unset": true,
+      "description": "Reference image <Picture 2> (character, outfit, location; local path, uploaded automatically), optional"
+    },
+    "ref_image_3": {
+      "node": "32",
+      "input": "image",
+      "type": "IMAGE",
+      "required": false,
+      "remove_if_unset": true,
+      "description": "Reference image <Picture 3> (character, outfit, location; local path, uploaded automatically), optional"
+    },
+    "ref_image_4": {
+      "node": "33",
+      "input": "image",
+      "type": "IMAGE",
+      "required": false,
+      "remove_if_unset": true,
+      "description": "Reference image <Picture 4> (character, outfit, location; local path, uploaded automatically), optional"
+    },
+    "ref_audio": {
+      "node": "40",
+      "input": "audio",
+      "type": "AUDIO",
+      "remove_if_unset": true,
+      "description": "Optional voice reference <Audio 1> (3-10s clean speech; local path, uploaded automatically)"
+    },
+    "width": {
+      "node": "20",
+      "input": "width",
+      "type": "INT",
+      "default": 1248,
+      "min": 512,
+      "max": 1536,
+      "description": "Video width (multiple of 32), same aspect as the input"
+    },
+    "height": {
+      "node": "20",
+      "input": "height",
+      "type": "INT",
+      "default": 832,
+      "min": 512,
+      "max": 1536,
+      "description": "Video height (multiple of 32), same aspect as the input"
+    },
+    "frames": {
+      "node": "20",
+      "input": "length",
+      "type": "INT",
+      "default": 124,
+      "min": 5,
+      "max": 362,
+      "description": "Frame count at 24fps, snapped up to 5+17n (124=~5s, 243=~10s, 362=15s)"
+    },
+    "steps": {
+      "node": "12",
+      "input": "steps",
+      "type": "INT",
+      "default": 4,
+      "min": 4,
+      "max": 8,
+      "description": "Sampling steps (4 matches the turbo LoRA)"
+    },
+    "ref_image_size": {
+      "node": "20",
+      "input": "ref_image_size",
+      "type": "COMBO",
+      "default": "match",
+      "options": [
+        "match",
+        "max"
+      ],
+      "description": "match: resize refs to the output canvas; max: keep refs at their larger native size"
+    }
+  },
+  "default_filename_prefix": "video/MiniMaxH3_ref2v",
+  "min_swap_gb": 18
+}

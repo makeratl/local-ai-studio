@@ -1,0 +1,51 @@
+{
+  "id": "qwen-2512-lightning-4step",
+  "display_name": "Qwen 2512 Lightning 4-Step",
+  "category": "text-to-image",
+  "description": "Qwen-Image-2512 (Dec 2025 update). Pick it for PHOTOREAL and cinematic/painterly work: much more photographic skin, light and texture, grittier wallpapers, richer posters; text rendering as good as the original. Close portraits tend to crop the top of the head: ask for 'full head in frame' or a looser shot. Lightning 4-step, ~4 s warm. It ignores flat 2D, cel-shaded and picture-book asks and weakens style LoRAs, so use the original qwen-* workflows for those.",
+  "source_file": "qwen-2512-lightning-4step.json",
+  "seed_node": 3,
+  "output": {
+    "save_node": 9,
+    "save_param": "filename_prefix"
+  },
+  "parameters": {
+    "prompt": {
+      "node": "6",
+      "input": "text",
+      "type": "STRING",
+      "required": true
+    },
+    "negative_prompt": {
+      "node": "7",
+      "input": "text",
+      "type": "STRING",
+      "default": ""
+    },
+    "aspect_ratio": {
+      "node": "5",
+      "input": "aspect_ratio",
+      "type": "COMBO",
+      "default": "1:1 Square",
+      "options": [
+        "1:1 Square",
+        "16:9 Landscape",
+        "9:16 Portrait",
+        "4:3 Landscape",
+        "3:4 Portrait",
+        "3:2 Landscape",
+        "2:3 Portrait"
+      ]
+    },
+    "batch_size": {
+      "node": "5",
+      "input": "batch_size",
+      "type": "INT",
+      "default": 1,
+      "min": 1,
+      "max": 4
+    }
+  },
+  "default_filename_prefix": "Qwen2512-4step",
+  "seed_param": "seed"
+}

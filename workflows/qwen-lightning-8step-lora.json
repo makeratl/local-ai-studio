@@ -1,0 +1,88 @@
+{
+  "3": {
+    "inputs": {
+      "seed": 0,
+      "steps": 8,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1,
+      "model": ["14", 0],
+      "positive": ["6", 0],
+      "negative": ["7", 0],
+      "latent_image": ["5", 0]
+    },
+    "class_type": "KSampler"
+  },
+  "4": {
+    "inputs": {
+      "lora_name": "qwen/Qwen-Image-Lightning-8steps-V1.0.safetensors",
+      "strength_model": 1,
+      "model": ["10", 0]
+    },
+    "class_type": "LoraLoaderModelOnly"
+  },
+  "5": {
+    "inputs": {
+      "aspect_ratio": "1:1 Square",
+      "batch_size": 1
+    },
+    "class_type": "QwenEmptyLatentImage"
+  },
+  "6": {
+    "inputs": {
+      "clip": ["12", 0],
+      "text": ""
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "7": {
+    "inputs": {
+      "clip": ["12", 0],
+      "text": ""
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "8": {
+    "inputs": {
+      "samples": ["3", 0],
+      "vae": ["11", 0]
+    },
+    "class_type": "VAEDecode"
+  },
+  "9": {
+    "inputs": {
+      "filename_prefix": "Qwen-8step-LoRA",
+      "images": ["8", 0]
+    },
+    "class_type": "SaveImage"
+  },
+  "10": {
+    "inputs": {
+      "unet_name": "qwen_image_fp8_e4m3fn.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader"
+  },
+  "11": {
+    "inputs": {
+      "vae_name": "qwen_image_vae.safetensors"
+    },
+    "class_type": "VAELoader"
+  },
+  "12": {
+    "inputs": {
+      "clip_name": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "type": "qwen_image"
+    },
+    "class_type": "CLIPLoader"
+  },
+  "14": {
+    "inputs": {
+      "lora_name": "your-style-lora.safetensors",
+      "strength_model": 1,
+      "model": ["4", 0]
+    },
+    "class_type": "LoraLoaderModelOnly"
+  }
+}

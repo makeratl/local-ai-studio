@@ -1,0 +1,74 @@
+{
+  "id": "minimax-h3-lipsync",
+  "display_name": "MiniMax H3 Image + Audio Lipsync (8-step turbo)",
+  "category": "video",
+  "description": "Animates a portrait so it speaks/sings a supplied audio track. MiniMaxH3AddGuide anchors the audio at frame 0 (kept, never denoised) while MiniMax H3 generates matching mouth motion. Works on flat 2D cartoons ( Set frames to cover the audio: frames = audio_seconds * 24, snapped up to 5+17n (6.4s -> 158). Width/height must match the portrait's aspect ratio (image is stretched to fit). ~3 min per 6s clip when models are warm Put the spoken words in the prompt as (S1): <d>[English] words</d>. Needs at least 18 GB of swap active (~44GB RAM peak) and nothing else on the GPU. To re-sync EXISTING footage (dubbing a filmed or rendered clip) use LatentSync instead: LatentSync. Long jobs return status 'running': poll get_job_result with wait_seconds.",
+  "source_file": "minimax-h3-lipsync.json",
+  "seed_node": 10,
+  "seed_param": "noise_seed",
+  "output": {
+    "save_node": 53,
+    "save_param": "filename_prefix"
+  },
+  "parameters": {
+    "prompt": {
+      "node": "20",
+      "input": "prompt",
+      "type": "STRING",
+      "required": true,
+      "description": "Describe the character talking (style, framing, expression) and include the transcript as (S1): <d>[English] words</d>; end with 'Audio: the provided voice track only'"
+    },
+    "input_image": {
+      "node": "30",
+      "input": "image",
+      "type": "IMAGE",
+      "required": true,
+      "description": "Portrait / first frame (local path, uploaded automatically)"
+    },
+    "input_audio": {
+      "node": "31",
+      "input": "audio",
+      "type": "AUDIO",
+      "required": true,
+      "description": "Driving speech or song (local path, uploaded automatically; wav/mp3/flac)"
+    },
+    "width": {
+      "node": "20",
+      "input": "width",
+      "type": "INT",
+      "default": 768,
+      "min": 512,
+      "max": 1536,
+      "description": "Video width (multiple of 32), same aspect as the portrait"
+    },
+    "height": {
+      "node": "20",
+      "input": "height",
+      "type": "INT",
+      "default": 768,
+      "min": 512,
+      "max": 1536,
+      "description": "Video height (multiple of 32), same aspect as the portrait"
+    },
+    "frames": {
+      "node": "20",
+      "input": "length",
+      "type": "INT",
+      "default": 124,
+      "min": 5,
+      "max": 362,
+      "description": "Frame count at 24fps covering the audio length, snapped up to 5+17n (124=~5s, 158=~6.6s, 362=15s)"
+    },
+    "steps": {
+      "node": "12",
+      "input": "steps",
+      "type": "INT",
+      "default": 8,
+      "min": 4,
+      "max": 30,
+      "description": "Sampling steps (8 matches the turbo LoRA)"
+    }
+  },
+  "default_filename_prefix": "video/MiniMaxH3_lipsync",
+  "min_swap_gb": 18
+}

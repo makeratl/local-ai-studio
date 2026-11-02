@@ -1,0 +1,123 @@
+{
+  "catalog": {
+    "version": "1.0.0",
+    "last_updated": "2026-10-29",
+    "categories": [
+      "text-to-image",
+      "image-to-image",
+      "video",
+      "upscale",
+      "3d"
+    ]
+  },
+  "workflows": {
+    "qwen-lightning-4step": {
+      "source_file": "qwen-lightning-4step.json",
+      "enabled": true
+    },
+    "qwen-lightning-8step": {
+      "source_file": "qwen-lightning-8step.json",
+      "enabled": true
+    },
+    "qwen-lightning-4step-lora": {
+      "source_file": "qwen-lightning-4step-lora.json",
+      "enabled": true
+    },
+    "qwen-lightning-8step-lora": {
+      "source_file": "qwen-lightning-8step-lora.json",
+      "enabled": true
+    },
+    "qwen-full": {
+      "source_file": "qwen-full.json",
+      "enabled": true
+    },
+    "qwen-full-lora": {
+      "source_file": "qwen-full-lora.json",
+      "enabled": true
+    },
+    "wan-i2v-fast": {
+      "source_file": "wan-i2v-fast.json",
+      "enabled": true
+    },
+    "wan-video-upscale": {
+      "source_file": "wan-video-upscale.json",
+      "enabled": true
+    },
+    "hunyuan3d-image2mesh": {
+      "source_file": "hunyuan3d-image2mesh.json",
+      "enabled": true
+    },
+    "hunyuan3d-image2mesh-hq": {
+      "source_file": "hunyuan3d-image2mesh-hq.json",
+      "enabled": true
+    },
+    "qwen-controlnet": {
+      "source_file": "qwen-controlnet.json",
+      "enabled": true
+    },
+    "qwen-edit-2511": {
+      "source_file": "qwen-edit-2511.json",
+      "enabled": true
+    },
+    "minimax-h3-t2v": {
+      "source_file": "minimax-h3-t2v.json",
+      "enabled": true
+    },
+    "minimax-h3-lipsync": {
+      "source_file": "minimax-h3-lipsync.json",
+      "enabled": true
+    },
+    "minimax-h3-i2v-fast": {
+      "source_file": "minimax-h3-i2v-fast.json",
+      "enabled": true
+    },
+    "minimax-h3-i2v-quality": {
+      "source_file": "minimax-h3-i2v-quality.json",
+      "enabled": true
+    },
+    "minimax-h3-flf2v-fast": {
+      "source_file": "minimax-h3-flf2v-fast.json",
+      "enabled": true
+    },
+    "minimax-h3-flf2v-quality": {
+      "source_file": "minimax-h3-flf2v-quality.json",
+      "enabled": true
+    },
+    "minimax-h3-ref2v": {
+      "source_file": "minimax-h3-ref2v.json",
+      "enabled": true
+    },
+    "qwen-2512-lightning-4step": {
+      "source_file": "qwen-2512-lightning-4step.json",
+      "enabled": true
+    },
+    "qwen-2512-lightning-8step": {
+      "source_file": "qwen-2512-lightning-8step.json",
+      "enabled": true
+    },
+    "qwen-2512-full": {
+      "source_file": "qwen-2512-full.json",
+      "enabled": true
+    },
+    "qwen-inpaint": {
+      "source_file": "qwen-inpaint.json",
+      "enabled": true
+    },
+    "qwen-outpaint": {
+      "source_file": "qwen-outpaint.json",
+      "enabled": true
+    },
+    "image-upscale": {
+      "source_file": "image-upscale.json",
+      "enabled": true
+    },
+    "minimax-h3-extend": {
+      "source_file": "minimax-h3-extend.json",
+      "enabled": true
+    },
+    "flux3-klein-edit": {
+      "source_file": "flux3-klein-edit.json",
+      "enabled": true
+    }
+  }
+}

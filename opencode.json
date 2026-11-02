@@ -1,0 +1,44 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "share": "disabled",
+  "default_agent": "studio",
+  "mcp": {
+    "comfy": {
+      "type": "local",
+      "command": ["node", "dist/index.js"],
+      "enabled": true,
+      "environment": {
+        "COMFYUI_PATH": "{env:COMFYUI_PATH}",
+        "COMFYUI_URL": "http://127.0.0.1:8188",
+        "COMFY_MCP_ALLOW": "text-to-image,upscale"
+      }
+    }
+  },
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": { "baseURL": "http://localhost:11434/v1" },
+      "models": {
+        "bonsai-2:27b": {
+          "name": "Bonsai 27B",
+          "tools": true,
+          "limit": { "context": 32768, "output": 8192 }
+        }
+      }
+    }
+  },
+  "agent": {
+    "studio": {
+      "mode": "primary",
+      "description": "Local ComfyUI brain, MCP tools only",
+      "model": "ollama/bonsai-2:27b",
+      "prompt": "{file:./agents/studio.md}",
+      "tools": {
+        "*": false,
+        "comfy_*": true
+      }
+    }
+  },
+  "permission": { "bash": "deny", "edit": "deny", "webfetch": "deny" }
+}

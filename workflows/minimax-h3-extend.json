@@ -1,0 +1,328 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "_meta": {
+   "title": "H3 FL2VA model"
+  },
+  "inputs": {
+   "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+   "weight_dtype": "default"
+  }
+ },
+ "2": {
+  "class_type": "LoraLoaderModelOnly",
+  "_meta": {
+   "title": "Turbo 8-step LoRA"
+  },
+  "inputs": {
+   "lora_name": "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
+   "strength_model": 1.0,
+   "model": [
+    "1",
+    0
+   ]
+  }
+ },
+ "3": {
+  "class_type": "CLIPLoader",
+  "_meta": {
+   "title": "Qwen3-VL 32B text encoder"
+  },
+  "inputs": {
+   "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+   "type": "minimax",
+   "device": "default"
+  }
+ },
+ "4": {
+  "class_type": "VAELoader",
+  "_meta": {
+   "title": "H3 video VAE"
+  },
+  "inputs": {
+   "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+  }
+ },
+ "5": {
+  "class_type": "VAELoader",
+  "_meta": {
+   "title": "H3 audio VAE"
+  },
+  "inputs": {
+   "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+  }
+ },
+ "40": {
+  "class_type": "LoadVideo",
+  "_meta": {
+   "title": "Tail of previous clip (17k+5 frames, with audio)"
+  },
+  "inputs": {
+   "file": "example.mp4"
+  }
+ },
+ "41": {
+  "class_type": "GetVideoComponents",
+  "inputs": {
+   "video": [
+    "40",
+    0
+   ]
+  }
+ },
+ "10": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 42
+  }
+ },
+ "11": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "res_multistep"
+  }
+ },
+ "12": {
+  "class_type": "BasicScheduler",
+  "inputs": {
+   "scheduler": "simple",
+   "steps": 4,
+   "denoise": 1.0,
+   "model": [
+    "2",
+    0
+   ]
+  }
+ },
+ "13": {
+  "class_type": "BasicGuider",
+  "inputs": {
+   "model": [
+    "2",
+    0
+   ],
+   "conditioning": [
+    "21",
+    0
+   ]
+  }
+ },
+ "14": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "10",
+    0
+   ],
+   "guider": [
+    "13",
+    0
+   ],
+   "sampler": [
+    "11",
+    0
+   ],
+   "sigmas": [
+    "12",
+    0
+   ],
+   "latent_image": [
+    "20",
+    1
+   ]
+  }
+ },
+ "20": {
+  "class_type": "MiniMaxH3ImageToVideo",
+  "_meta": {
+   "title": "H3 conditioning for the continuation"
+  },
+  "inputs": {
+   "clip": [
+    "3",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ],
+   "prompt": "",
+   "width": [
+    "44",
+    0
+   ],
+   "height": [
+    "44",
+    1
+   ],
+   "length": 124
+  }
+ },
+ "21": {
+  "class_type": "MiniMaxH3AddGuide",
+  "_meta": {
+   "title": "Anchor previous clip's tail + soundtrack at frame 0"
+  },
+  "inputs": {
+   "positive": [
+    "20",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ],
+   "audio_vae": [
+    "5",
+    0
+   ],
+   "latent": [
+    "20",
+    1
+   ],
+   "image": [
+    "42",
+    0
+   ],
+   "audio": [
+    "43",
+    0
+   ],
+   "frame_idx": 0
+  }
+ },
+ "50": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "14",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ]
+  }
+ },
+ "51": {
+  "class_type": "VAEDecodeAudio",
+  "inputs": {
+   "samples": [
+    "14",
+    0
+   ],
+   "vae": [
+    "5",
+    0
+   ]
+  }
+ },
+ "52": {
+  "class_type": "CreateVideo",
+  "inputs": {
+   "fps": 24,
+   "bit_depth": 8,
+   "images": [
+    "62",
+    0
+   ],
+   "audio": [
+    "63",
+    0
+   ]
+  }
+ },
+ "53": {
+  "class_type": "SaveVideo",
+  "inputs": {
+   "filename_prefix": "video/MiniMaxH3_extend",
+   "format": "mp4",
+   "codec": "h264",
+   "codec.encoding": "auto",
+   "video": [
+    "52",
+    0
+   ]
+  }
+ },
+ "42": {
+  "class_type": "ImageFromBatch",
+  "inputs": {
+   "image": [
+    "41",
+    0
+   ],
+   "batch_index": -22,
+   "length": 22
+  }
+ },
+ "43": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "41",
+    1
+   ],
+   "start_index": -0.916667,
+   "duration": 0.916667
+  }
+ },
+ "44": {
+  "class_type": "GetImageSize",
+  "inputs": {
+   "image": [
+    "41",
+    0
+   ]
+  }
+ },
+ "60": {
+  "class_type": "ImageFromBatch",
+  "inputs": {
+   "image": [
+    "50",
+    0
+   ],
+   "batch_index": 22,
+   "length": 4096
+  }
+ },
+ "61": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "51",
+    0
+   ],
+   "start_index": 0.916667,
+   "duration": 3600.0
+  }
+ },
+ "62": {
+  "class_type": "ImageBatch",
+  "inputs": {
+   "image1": [
+    "41",
+    0
+   ],
+   "image2": [
+    "60",
+    0
+   ]
+  }
+ },
+ "63": {
+  "class_type": "AudioConcat",
+  "inputs": {
+   "audio1": [
+    "41",
+    1
+   ],
+   "audio2": [
+    "61",
+    0
+   ],
+   "direction": "after"
+  }
+ }
+}

@@ -1,0 +1,75 @@
+{
+  "id": "wan-i2v-fast",
+  "display_name": "WAN 2.2 I2V Fast (4-step)",
+  "category": "video",
+  "description": "Fast image-to-video generation using WAN 2.2 with 4-step Lightning LoRA on both high_noise and low_noise models. Best for action shots and quick previews. 81 frames @ 16fps (5 seconds).",
+  "source_file": "wan-i2v-fast.json",
+  "input_node": 1,
+  "input_param": "image",
+  "seed_node": 30,
+  "seed_param": "noise_seed",
+  "output": {
+    "save_node": 34,
+    "save_param": "filename_prefix"
+  },
+  "parameters": {
+    "prompt": {
+      "node": "27",
+      "input": "text",
+      "type": "STRING",
+      "required": true,
+      "description": "Motion prompt describing animation"
+    },
+    "negative_prompt": {
+      "node": "28",
+      "input": "text",
+      "type": "STRING",
+      "default": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
+      "description": "Negative quality prompt"
+    },
+    "input_image": {
+      "node": "1",
+      "input": "image",
+      "type": "IMAGE",
+      "required": true,
+      "description": "Input image path or upload"
+    },
+    "width": {
+      "node": "29",
+      "input": "width",
+      "type": "INT",
+      "default": 640,
+      "min": 480,
+      "max": 1024,
+      "description": "Video width"
+    },
+    "height": {
+      "node": "29",
+      "input": "height",
+      "type": "INT",
+      "default": 640,
+      "min": 480,
+      "max": 1024,
+      "description": "Video height"
+    },
+    "frames": {
+      "node": "29",
+      "input": "length",
+      "type": "INT",
+      "default": 81,
+      "min": 9,
+      "max": 81,
+      "description": "Number of frames (81=5s @ 16fps)"
+    },
+    "fps": {
+      "node": "33",
+      "input": "fps",
+      "type": "INT",
+      "default": 16,
+      "min": 8,
+      "max": 30,
+      "description": "Frames per second"
+    }
+  },
+  "default_filename_prefix": "WAN-Fast"
+}

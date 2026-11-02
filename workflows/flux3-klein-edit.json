@@ -1,0 +1,209 @@
+{
+ "101": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "flux3-image-klein-bf16.safetensors",
+   "weight_dtype": "default"
+  }
+ },
+ "102": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen3vl_4b_bf16.safetensors",
+   "type": "flux3",
+   "device": "default"
+  }
+ },
+ "103": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "Flux/flux2-vae.safetensors"
+  }
+ },
+ "132": {
+  "class_type": "ModelSamplingFlux",
+  "inputs": {
+   "model": [
+    "101",
+    0
+   ],
+   "max_shift": 2.77259,
+   "base_shift": 2.77259,
+   "width": 1024,
+   "height": 1024
+  }
+ },
+ "104": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "clip": [
+    "102",
+    0
+   ],
+   "text": ""
+  }
+ },
+ "105": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "clip": [
+    "102",
+    0
+   ],
+   "text": ""
+  }
+ },
+ "136": {
+  "class_type": "ReferenceMultiLatent",
+  "inputs": {
+   "positive": [
+    "104",
+    0
+   ],
+   "negative": [
+    "105",
+    0
+   ],
+   "vae": [
+    "103",
+    0
+   ],
+   "resolution": "resize",
+   "resolution.megapixels": 1.0,
+   "images.image0": [
+    "200",
+    0
+   ],
+   "images.image1": [
+    "201",
+    0
+   ],
+   "images.image2": [
+    "202",
+    0
+   ],
+   "images.image3": [
+    "203",
+    0
+   ]
+  }
+ },
+ "50": {
+  "class_type": "PrimitiveFloat",
+  "inputs": {
+   "value": 1.0
+  }
+ },
+ "140": {
+  "class_type": "ImageScaleToTotalPixels",
+  "inputs": {
+   "image": [
+    "200",
+    0
+   ],
+   "upscale_method": "lanczos",
+   "megapixels": [
+    "50",
+    0
+   ],
+   "resolution_steps": 16
+  }
+ },
+ "141": {
+  "class_type": "GetImageSize",
+  "inputs": {
+   "image": [
+    "140",
+    0
+   ]
+  }
+ },
+ "139": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": [
+    "141",
+    0
+   ],
+   "height": [
+    "141",
+    1
+   ],
+   "batch_size": 1
+  }
+ },
+ "107": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "132",
+    0
+   ],
+   "positive": [
+    "136",
+    0
+   ],
+   "negative": [
+    "136",
+    1
+   ],
+   "latent_image": [
+    "139",
+    0
+   ],
+   "seed": 0,
+   "steps": 8,
+   "cfg": 1.0,
+   "sampler_name": "euler",
+   "scheduler": "simple",
+   "denoise": 1.0
+  }
+ },
+ "108": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "107",
+    0
+   ],
+   "vae": [
+    "103",
+    0
+   ]
+  }
+ },
+ "9": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "108",
+    0
+   ],
+   "filename_prefix": "Klein-Edit"
+  }
+ },
+ "200": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "example.png"
+  }
+ },
+ "201": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "example.png"
+  }
+ },
+ "202": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "example.png"
+  }
+ },
+ "203": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "example.png"
+  }
+ }
+}

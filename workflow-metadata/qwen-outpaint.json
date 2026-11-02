@@ -1,0 +1,119 @@
+{
+  "id": "qwen-outpaint",
+  "display_name": "Qwen Outpaint (extend canvas)",
+  "category": "image-to-image",
+  "description": "Extend an image past its borders (widen to 16:9, add headroom, make a wallpaper from a square). Original Qwen-Image + InstantX inpainting ControlNet, Lightning 8-step (~10 s warm). Pixels outside the mask are composited back untouched. Prompt describes the WHOLE image as it should look after the edit, not just the patch. Output is at the working resolution (megapixels), so large inputs come back smaller: follow with image-upscale if needed. Set the pixels to add on each side (source pixels, before megapixel scaling); padding is feathered into the original edge.",
+  "parameters": {
+    "prompt": {
+      "node": "6",
+      "input": "text",
+      "type": "STRING",
+      "required": true,
+      "description": "Full-scene description of the extended image"
+    },
+    "image": {
+      "node": "20",
+      "input": "image",
+      "type": "IMAGE",
+      "required": true,
+      "description": "Source image (local path, uploaded automatically)"
+    },
+    "left": {
+      "node": "27",
+      "input": "left",
+      "type": "INT",
+      "default": 256,
+      "min": 0,
+      "max": 2048,
+      "description": "Pixels to add on the left"
+    },
+    "top": {
+      "node": "27",
+      "input": "top",
+      "type": "INT",
+      "default": 0,
+      "min": 0,
+      "max": 2048,
+      "description": "Pixels to add on the top"
+    },
+    "right": {
+      "node": "27",
+      "input": "right",
+      "type": "INT",
+      "default": 256,
+      "min": 0,
+      "max": 2048,
+      "description": "Pixels to add on the right"
+    },
+    "bottom": {
+      "node": "27",
+      "input": "bottom",
+      "type": "INT",
+      "default": 0,
+      "min": 0,
+      "max": 2048,
+      "description": "Pixels to add on the bottom"
+    },
+    "feathering": {
+      "node": "27",
+      "input": "feathering",
+      "type": "INT",
+      "default": 24,
+      "min": 0,
+      "max": 256,
+      "description": "Blend width into the original edge"
+    },
+    "negative_prompt": {
+      "node": "7",
+      "input": "text",
+      "type": "STRING",
+      "default": "",
+      "description": "Only used if you raise cfg above 1"
+    },
+    "megapixels": {
+      "node": "50",
+      "input": "value",
+      "type": "FLOAT",
+      "default": 1.6,
+      "min": 0.5,
+      "max": 2.5,
+      "description": "Working resolution; output comes back at this size (1.6 MP ~ Qwen native). Raise for big images, then use image-upscale"
+    },
+    "mask_grow": {
+      "node": "26",
+      "input": "expand",
+      "type": "INT",
+      "default": 8,
+      "min": 0,
+      "max": 64,
+      "description": "Pixels to grow the mask so the edit blends past the edge"
+    },
+    "steps": {
+      "node": "3",
+      "input": "steps",
+      "type": "INT",
+      "default": 8,
+      "min": 4,
+      "max": 50,
+      "description": "8 matches the Lightning LoRA"
+    },
+    "control_strength": {
+      "node": "31",
+      "input": "strength",
+      "type": "FLOAT",
+      "default": 1.0,
+      "min": 0.0,
+      "max": 2.0,
+      "description": "Inpaint ControlNet strength: lower lets the prompt override the surrounding context more"
+    }
+  },
+  "default_filename_prefix": "Qwen-Outpaint",
+  "source_file": "qwen-outpaint.json",
+  "output": {
+    "type": "IMAGE",
+    "save_node": 9,
+    "save_param": "filename_prefix"
+  },
+  "seed_node": 3,
+  "seed_param": "seed"
+}

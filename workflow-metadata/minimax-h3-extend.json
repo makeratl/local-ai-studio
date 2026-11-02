@@ -1,0 +1,50 @@
+{
+  "id": "minimax-h3-extend",
+  "display_name": "MiniMax H3 Extend Clip + Audio (4-step)",
+  "category": "video",
+  "description": "Continue an existing H3 clip past its end and get back ONE joined clip (source + new footage). The last 22 frames and their audio guide the start of a new H3 render, so motion, character and voice carry across the seam; chain calls to go past H3's 15 s limit. Adds (frames - 22)/24 seconds: 124 -> +4.25 s, 243 -> +9.2 s, 362 -> +14.2 s. Source must be a 24 fps clip WITH an audio track and width/height multiples of 32 (any H3 output qualifies); output keeps the source size. Prompt describes only what happens NEXT, in the same style line + SHOT + (S1): <d>[English] words</d> + 'Audio:' format. MiniMax H3 FL2VA + 4-step 768p turbo LoRA, ~2-3 min. ~44GB RAM peak: needs swap and nothing else on the GPU. Long jobs return status 'running': poll get_job_result with wait_seconds.",
+  "source_file": "minimax-h3-extend.json",
+  "seed_node": 10,
+  "seed_param": "noise_seed",
+  "output": {
+    "type": "VIDEO",
+    "save_node": 53,
+    "save_param": "filename_prefix"
+  },
+  "parameters": {
+    "prompt": {
+      "node": "20",
+      "input": "prompt",
+      "type": "STRING",
+      "required": true,
+      "description": "What happens next (style line + SHOT lines + dialogue + 'Audio:' line)"
+    },
+    "input_video": {
+      "node": "40",
+      "input": "file",
+      "type": "VIDEO",
+      "required": true,
+      "description": "Clip to extend (local mp4/mkv path, uploaded automatically); 24 fps with audio"
+    },
+    "frames": {
+      "node": "20",
+      "input": "length",
+      "type": "INT",
+      "default": 124,
+      "min": 39,
+      "max": 362,
+      "description": "New-segment length at 24 fps incl. the 22-frame overlap, snapped up to 5+17n (124 adds ~4.25 s)"
+    },
+    "steps": {
+      "node": "12",
+      "input": "steps",
+      "type": "INT",
+      "default": 4,
+      "min": 4,
+      "max": 8,
+      "description": "4 matches the turbo LoRA"
+    }
+  },
+  "default_filename_prefix": "video/MiniMaxH3_extend",
+  "min_swap_gb": 18
+}

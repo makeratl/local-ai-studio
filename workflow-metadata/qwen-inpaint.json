@@ -1,0 +1,81 @@
+{
+  "id": "qwen-inpaint",
+  "display_name": "Qwen Inpaint (masked edit)",
+  "category": "image-to-image",
+  "description": "Repaint only a masked region of an image: replace an object, fix hands/faces, change signage text. Original Qwen-Image + InstantX inpainting ControlNet, Lightning 8-step (~10 s warm). Pixels outside the mask are composited back untouched. Prompt describes the WHOLE image as it should look after the edit, not just the patch. Output is at the working resolution (megapixels), so large inputs come back smaller: follow with image-upscale if needed. Mask: black/white PNG the same size as the image, WHITE = repaint (read from the red channel). For instruction edits with no mask (pose, wardrobe, whole-character changes) use qwen-edit-2511.",
+  "parameters": {
+    "prompt": {
+      "node": "6",
+      "input": "text",
+      "type": "STRING",
+      "required": true,
+      "description": "Full-scene description including what should appear in the masked area"
+    },
+    "image": {
+      "node": "20",
+      "input": "image",
+      "type": "IMAGE",
+      "required": true,
+      "description": "Source image (local path, uploaded automatically)"
+    },
+    "mask": {
+      "node": "21",
+      "input": "image",
+      "type": "IMAGE",
+      "required": true,
+      "description": "Mask PNG, same size as image, white = repaint (local path, uploaded automatically)"
+    },
+    "negative_prompt": {
+      "node": "7",
+      "input": "text",
+      "type": "STRING",
+      "default": "",
+      "description": "Only used if you raise cfg above 1"
+    },
+    "megapixels": {
+      "node": "50",
+      "input": "value",
+      "type": "FLOAT",
+      "default": 1.6,
+      "min": 0.5,
+      "max": 2.5,
+      "description": "Working resolution; output comes back at this size (1.6 MP ~ Qwen native). Raise for big images, then use image-upscale"
+    },
+    "mask_grow": {
+      "node": "26",
+      "input": "expand",
+      "type": "INT",
+      "default": 8,
+      "min": 0,
+      "max": 64,
+      "description": "Pixels to grow the mask so the edit blends past the edge"
+    },
+    "steps": {
+      "node": "3",
+      "input": "steps",
+      "type": "INT",
+      "default": 8,
+      "min": 4,
+      "max": 50,
+      "description": "8 matches the Lightning LoRA"
+    },
+    "control_strength": {
+      "node": "31",
+      "input": "strength",
+      "type": "FLOAT",
+      "default": 1.0,
+      "min": 0.0,
+      "max": 2.0,
+      "description": "Inpaint ControlNet strength: lower lets the prompt override the surrounding context more"
+    }
+  },
+  "default_filename_prefix": "Qwen-Inpaint",
+  "source_file": "qwen-inpaint.json",
+  "output": {
+    "type": "IMAGE",
+    "save_node": 9,
+    "save_param": "filename_prefix"
+  },
+  "seed_node": 3,
+  "seed_param": "seed"
+}

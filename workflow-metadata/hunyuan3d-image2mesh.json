@@ -1,0 +1,82 @@
+{
+  "id": "hunyuan3d-image2mesh",
+  "display_name": "Hunyuan3D v2 Image-to-Mesh",
+  "category": "3d",
+  "description": "Convert a single image to a 3D mesh model using Hunyuan3D v2. Automatically removes background, generates mesh with surface net algorithm, and outputs GLB format. Resolution 3072, 20 steps, octree 256. Output is always GLB; run tools/mesh_to_solid.py for a printable STL.",
+  "source_file": "hunyuan3d-image2mesh.json",
+  "input_node": 1,
+  "input_param": "image",
+  "seed_node": 8,
+  "seed_param": "seed",
+  "output": {
+    "save_node": 11,
+    "save_param": "filename_prefix"
+  },
+  "parameters": {
+    "input_image": {
+      "node": "1",
+      "input": "image",
+      "type": "IMAGE",
+      "required": true,
+      "description": "Input image to convert to 3D mesh"
+    },
+    "resolution": {
+      "node": "7",
+      "input": "resolution",
+      "type": "INT",
+      "default": 3072,
+      "min": 1024,
+      "max": 4096,
+      "description": "Latent resolution (higher = better quality, slower)"
+    },
+    "steps": {
+      "node": "8",
+      "input": "steps",
+      "type": "INT",
+      "default": 20,
+      "min": 10,
+      "max": 50,
+      "description": "Sampling steps"
+    },
+    "cfg": {
+      "node": "8",
+      "input": "cfg",
+      "type": "FLOAT",
+      "default": 8.0,
+      "min": 1.0,
+      "max": 15.0,
+      "description": "CFG scale"
+    },
+    "octree_resolution": {
+      "node": "9",
+      "input": "octree_resolution",
+      "type": "INT",
+      "default": 256,
+      "min": 64,
+      "max": 512,
+      "description": "Octree resolution for voxel decoding (higher = more detail)"
+    },
+    "threshold": {
+      "node": "10",
+      "input": "threshold",
+      "type": "FLOAT",
+      "default": 0.6,
+      "min": 0.1,
+      "max": 0.9,
+      "description": "Mesh extraction threshold (lower = more vertices)"
+    },
+    "algorithm": {
+      "node": "10",
+      "input": "algorithm",
+      "type": "COMBO",
+      "default": "surface net",
+      "options": [
+        "surface net",
+        "marching cubes"
+      ],
+      "description": "Mesh extraction algorithm"
+    }
+  },
+  "notes": "GLB preserves colors/textures for web preview. STL is best for 3D printing but loses colors. The SaveGLB node auto-detects format from filename extension.",
+  "default_filename_prefix": "Hunyuan3D"
+}

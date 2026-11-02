@@ -1,0 +1,82 @@
+{
+  "id": "hunyuan3d-image2mesh-hq",
+  "display_name": "Hunyuan3D v2 Image-to-Mesh (High Quality)",
+  "category": "3d",
+  "description": "High-quality image-to-3D mesh using Hunyuan3D v2 with maximum detail. Resolution 4096, octree 512, 35 steps. Longer generation but finer mesh detail. Outputs GLB for preview. Output is always GLB; run tools/mesh_to_solid.py for a printable STL.",
+  "source_file": "hunyuan3d-image2mesh-hq.json",
+  "input_node": 1,
+  "input_param": "image",
+  "seed_node": 8,
+  "seed_param": "seed",
+  "output": {
+    "save_node": 11,
+    "save_param": "filename_prefix"
+  },
+  "parameters": {
+    "input_image": {
+      "node": "1",
+      "input": "image",
+      "type": "IMAGE",
+      "required": true,
+      "description": "Input image to convert to 3D mesh"
+    },
+    "resolution": {
+      "node": "7",
+      "input": "resolution",
+      "type": "INT",
+      "default": 4096,
+      "min": 1024,
+      "max": 4096,
+      "description": "Latent resolution (4096 = maximum quality)"
+    },
+    "steps": {
+      "node": "8",
+      "input": "steps",
+      "type": "INT",
+      "default": 35,
+      "min": 20,
+      "max": 50,
+      "description": "Sampling steps (more = better detail)"
+    },
+    "cfg": {
+      "node": "8",
+      "input": "cfg",
+      "type": "FLOAT",
+      "default": 8.0,
+      "min": 1.0,
+      "max": 15.0,
+      "description": "CFG scale"
+    },
+    "octree_resolution": {
+      "node": "9",
+      "input": "octree_resolution",
+      "type": "INT",
+      "default": 512,
+      "min": 256,
+      "max": 512,
+      "description": "Octree resolution (512 = finest voxel detail)"
+    },
+    "threshold": {
+      "node": "10",
+      "input": "threshold",
+      "type": "FLOAT",
+      "default": 0.5,
+      "min": 0.3,
+      "max": 0.7,
+      "description": "Mesh extraction threshold (0.5 = more detail, more vertices)"
+    },
+    "algorithm": {
+      "node": "10",
+      "input": "algorithm",
+      "type": "COMBO",
+      "default": "surface net",
+      "options": [
+        "surface net",
+        "marching cubes"
+      ],
+      "description": "Surface net preserves smooth curves better"
+    }
+  },
+  "notes": "High quality settings: resolution 4096, octree 512, 35 steps. Takes longer but produces finer mesh detail.",
+  "default_filename_prefix": "Hunyuan3D-HQ"
+}
