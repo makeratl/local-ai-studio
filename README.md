@@ -53,6 +53,8 @@ Voice and music aren't in this repo. The video uses Qwen3-TTS, VoxCPM2 and ACE-S
 - Node 22, Ollama 0.40.13, OpenCode 1.17.8
 - Older Ollama versions may refuse the local model: 0.30.8 did
 
+Every workflow here has been run once through this server on that machine. `hunyuan3d-image2mesh-hq` is memory hungry, leaving about 8 GB of RAM plus swap free on this box.
+
 Other platforms and smaller cards are untested. Images and the local model used 29 GB of VRAM together here, and smaller setups may need smaller models. MiniMax H3 peaks around 44 GB of system RAM, so its workflows refuse to run on Linux without 18 GB of swap.
 
 ## Setup
