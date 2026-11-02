@@ -2,9 +2,35 @@
 
 Describe what you want in plain language, and your own machine makes it.
 
+![A hedgehog with a sunflower crown walking through a sunflower field](docs/images/hero-sunflower-field.jpg)
+
 This repo is an [MCP](https://modelcontextprotocol.io) server that gives an AI agent access to local ComfyUI workflows for images, video with native audio, and 3D. The tools stay on your machine. The brain driving them is swappable: Claude Code with a cloud model, or OpenCode with a local model in Ollama.
 
 It's provided as is, under the MIT license. There's no support team. Questions are welcome and may get answered when time allows.
+
+```mermaid
+flowchart LR
+    A[Claude Code<br/>cloud model] --> M[MCP server<br/>this repo]
+    B[OpenCode + Ollama<br/>local model] --> M
+    M --> C[ComfyUI]
+    C --> D[Images]
+    C --> E[Video + audio]
+    C --> F[3D]
+```
+
+## Examples
+
+Larry, the test subject, made with these workflows.
+
+| Text to image | Instruction edit |
+|---|---|
+| ![Larry on a plain background](docs/images/image-text-to-image.jpg) | ![Larry on a workbench, one paw raised](docs/images/image-edit.jpg) |
+| `qwen-lightning-8step` | `flux3-klein-edit` |
+
+| Video with native audio | Printable 3D |
+|---|---|
+| ![Larry walking through sunflowers](docs/images/video-walk.gif) | ![Views of the solid Larry mesh](docs/images/3d-solid-mesh.jpg) |
+| `minimax-h3-i2v-fast` (GIF has no sound) | `hunyuan3d-image2mesh-hq` + `tools/mesh_to_solid.py` |
 
 ## What's here
 
