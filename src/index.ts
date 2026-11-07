@@ -3,6 +3,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
 import * as path from 'path';
 import * as fs from 'fs/promises';
+import * as os from 'os';
 import { fileURLToPath } from 'url';
 import { WorkflowParser } from './workflow-parser.js';
 
@@ -244,7 +245,7 @@ class ComfyMCPServer {
       },
       {
         name: 'upload_image',
-        description: 'Upload an image to ComfyUI for use in image-to-image or controlnet workflows.',
+        description: 'Upload a local file (image, audio or video) into ComfyUI\'s input folder. Optional: run_workflow uploads local paths given for image/audio/video parameters itself, including files in ComfyUI\'s output folder. Returns the filename to pass instead.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -382,16 +383,14 @@ class ComfyMCPServer {
 
     for (const [paramName, paramConfig] of Object.entries(metadata.parameters)) {
       const config = paramConfig as any;
-      // ComfyUI's /upload/image endpoint stores any input file, so audio and video use the same path
-      if (['IMAGE', 'AUDIO', 'VIDEO'].includes(config.type) && parsedParams[paramName]) {
-        const imagePath = parsedParams[paramName];
-        if (imagePath && typeof imagePath === 'string') {
-          const uploadedFilename = await this.runner.uploadImage(imagePath);
-          parsedParams[paramName] = uploadedFilename;
-          console.error(`[ComfyMCP] Uploaded ${config.type.toLowerCase()}: ${imagePath} -> ${uploadedFilename}`);
-        }
+      if (['IMAGE', 'AUDIO', 'VIDEO'].includes(config.type)
+          && typeof parsedParams[paramName] === 'string' && parsedParams[paramName].trim()) {
+        parsedParams[paramName] = await this.resolveInputFile(paramName, parsedParams[paramName]);
       }
     }
+
+    // applyParameters edits in place; keep the template to spot loader nodes nothing was bound to
+    const template = JSON.parse(JSON.stringify(workflow));
 
     const actualSeed = seed ?? -1;
     const usedSeed = actualSeed === -1 ? Math.floor(Math.random() * 18446744073709551615) : actualSeed;
@@ -405,6 +404,7 @@ class ComfyMCPServer {
       usedSeed,
       prefix
     );
+    this.assertNoPlaceholderInputs(workflow_id, metadata, parsedParams, template, modifiedWorkflow);
 
     const promptId = await this.runner.submitWorkflow(modifiedWorkflow);
 
@@ -573,6 +573,73 @@ class ComfyMCPServer {
   private async handleListLoras(args: { category?: 'qwen' | 'xfs' | 'other' }): Promise<{ loras: LoraInfo[] }> {
     const loras = await this.parser.discoverLoras(args.category);
     return { loras };
+  }
+
+  /**
+   * Turn an IMAGE/AUDIO/VIDEO parameter into a name ComfyUI's loader nodes can read.
+   * A local path (absolute, relative, ~ or file://, including ComfyUI's own output folder)
+   * is uploaded into the input folder; a bare name already in the input folder, such as
+   * an upload_image result, is used as is. Anything else fails loudly.
+   */
+  private async resolveInputFile(paramName: string, raw: string): Promise<string> {
+    const inputDir = path.join(this.comfyuiPath, 'input');
+    const isFile = (p: string) => fs.stat(p).then(s => s.isFile(), () => false);
+    let value = raw.trim();
+    if (value.startsWith('file://')) value = fileURLToPath(value);
+    if (value === '~' || value.startsWith('~/')) value = path.join(os.homedir(), value.slice(1));
+
+    const looksLikePath = path.isAbsolute(value) || value.includes('/') || value.includes(path.sep);
+    if (!looksLikePath && await isFile(path.join(inputDir, value))) {
+      return value;
+    }
+
+    const local = path.resolve(value);
+    if (await isFile(local)) {
+      const inInput = path.relative(inputDir, local);
+      if (!inInput.startsWith('..') && !path.isAbsolute(inInput)) {
+        return inInput.split(path.sep).join('/');
+      }
+      const uploaded = await this.runner.uploadImage(local);
+      console.error(`[ComfyMCP] Uploaded ${paramName}: ${local} -> ${uploaded}`);
+      return uploaded;
+    }
+
+    throw new Error(
+      `${paramName}: file not found: "${raw}". Pass the absolute path of a local file ` +
+      `(it is uploaded to ComfyUI automatically), or a filename returned by upload_image.`
+    );
+  }
+
+  /**
+   * Refuse to queue a prompt in which a loader node still holds the workflow file's own
+   * value (example.png and the like). ComfyUI would load that placeholder without
+   * complaint and the job would "succeed" on the wrong input.
+   */
+  private assertNoPlaceholderInputs(workflowId: string, metadata: any, params: Record<string, any>, template: any, prompt: any): void {
+    const loaderInputs = ['image', 'audio', 'video', 'file'];
+    const paramForNode = new Map<string, string>();
+    for (const [name, cfg] of Object.entries(metadata.parameters || {}) as [string, any][]) {
+      const nodeId = cfg.node ?? cfg.node_path?.[0];
+      if (nodeId !== undefined) paramForNode.set(nodeId.toString(), name);
+    }
+
+    const problems: string[] = [];
+    for (const [nodeId, node] of Object.entries(prompt) as [string, any][]) {
+      if (!/^(VHS_)?Load(Image|Audio|Video)/.test(node?.class_type ?? '')) continue;
+      for (const key of loaderInputs) {
+        const value = node.inputs?.[key];
+        if (typeof value === 'string' && value === template[nodeId]?.inputs?.[key]) {
+          const param = paramForNode.get(nodeId);
+          if (param && params[param] === value) continue;  // the caller asked for exactly this file
+          problems.push(param
+            ? `${param} was not provided (node ${nodeId} would load the placeholder "${value}")`
+            : `node ${nodeId} (${node.class_type}) has no parameter bound and would load the placeholder "${value}"`);
+        }
+      }
+    }
+    if (problems.length) {
+      throw new Error(`${workflowId}: refusing to run on placeholder inputs: ${problems.join('; ')}`);
+    }
   }
 
   private async handleUploadImage(args: { image_path: string; subfolder?: string }): Promise<any> {

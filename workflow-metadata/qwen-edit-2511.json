@@ -27,23 +27,25 @@
     "image1": {
       "node": "101",
       "input": "image",
-      "type": "STRING",
+      "type": "IMAGE",
       "required": true,
-      "description": "Primary reference image (filename after upload). This is the image being edited."
+      "description": "Primary reference image (local path, uploaded automatically; a name already in ComfyUI's input folder also works). This is the image being edited."
     },
     "image2": {
       "node": "102",
       "input": "image",
-      "type": "STRING",
+      "type": "IMAGE",
       "required": false,
-      "description": "Second reference for identity lock (e.g. a different angle of the same character). Repeat image1 if unused."
+      "description": "Optional second reference for identity lock (e.g. a different angle of the same character), local path, uploaded automatically. Leave unset if you have none.",
+      "remove_if_unset": true
     },
     "image3": {
       "node": "103",
       "input": "image",
-      "type": "STRING",
+      "type": "IMAGE",
       "required": false,
-      "description": "Third reference for identity lock. Repeat image1 if unused."
+      "description": "Optional third reference for identity lock, local path, uploaded automatically. Leave unset if you have none.",
+      "remove_if_unset": true
     },
     "megapixels": {
       "node": "110",
